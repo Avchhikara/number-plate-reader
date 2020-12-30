@@ -1,5 +1,5 @@
 from os import path, curdir, getenv, makedirs
-from flask import Flask, redirect, request, url_for, flash, send_from_directory
+from flask import Flask, redirect, request, url_for, flash, send_from_directory, render_template
 from werkzeug.utils import secure_filename
 
 from utils.checkAllowed import allowed_file
@@ -15,7 +15,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.route('/')
 def index():
-    return 'Homepage'
+    return render_template('index.html')
 
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -38,20 +38,16 @@ def upload():
                                     filename=filename))
 
     # Otherwise returning the uploader page
-    return '''
-    <!doctype html>
-    <title>Upload new File</title>
-    <h1>Upload new File</h1>
-    <form method=post enctype=multipart/form-data>
-      <input type=file name=file>
-      <input type=submit value=Upload>
-    </form>
-    '''
+    return render_template('index.html')
 
 
-@app.route('/uploads/<path:filename>')
+@app.route('/reading/<path:filename>')
 def uploaded_image_view(filename):
-    return send_from_directory(app.config[UPLOAD_FOLDER], filename=filename, as_attachment=True)
+    # return send_from_directory(app.config[UPLOAD_FOLDER], filename=filename, as_attachment=True)
+    # Sending the file name (except the exception) back as number for now.
+    return {
+        'registrationNumber': filename.split(".")[0]
+    }
 
 
 if __name__ == "__main__":
