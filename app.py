@@ -1,4 +1,4 @@
-from os import path, curdir, getenv, makedirs
+from os import path, curdir, getenv, makedirs, urandom, remove
 from flask import Flask, redirect, request, url_for, flash, send_from_directory, render_template
 from werkzeug.utils import secure_filename
 
@@ -34,14 +34,18 @@ def upload():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('uploaded_image_view',
-                                    filename=filename))
+
+            # Do some processing here
+
+            # deleting the file after some processing
+            remove(path.join(app.config['UPLOAD_FOLDER'], filename))
+            return uploaded_image_view(filename)
 
     # Otherwise returning the uploader page
     return render_template('index.html')
 
 
-@app.route('/reading/<path:filename>')
+@app.route('/reading/<path:filename>', methods=["GET", "POST"])
 def uploaded_image_view(filename):
     # return send_from_directory(app.config[UPLOAD_FOLDER], filename=filename, as_attachment=True)
     # Sending the file name (except the exception) back as number for now.
@@ -51,4 +55,5 @@ def uploaded_image_view(filename):
 
 
 if __name__ == "__main__":
+    # app.secret_key = urandom(34)
     app.run(debug=True, port=(getenv('PORT') or 1234))
