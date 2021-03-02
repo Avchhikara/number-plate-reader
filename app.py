@@ -1,7 +1,7 @@
 from os import path, curdir, getenv, makedirs, urandom, remove
 from flask import Flask, redirect, request, url_for, flash, send_from_directory, render_template
 from werkzeug.utils import secure_filename
-from flask.ext.session import Session
+# from flask.ext.session import Session
 
 from utils.checkAllowed import allowed_file
 
@@ -12,7 +12,7 @@ makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 app = Flask(__name__, static_folder='uploads')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-sess = Session(app)
+# sess = Session(app)
 
 
 @app.route('/')
