@@ -25,12 +25,12 @@ def upload():
     if 'POST' == request.method:
         # check if the post request has the file part
         if 'file' not in request.files:
-            return redirect(request.url)
+            return "No attribute with the name file"
         file = request.files['file']
         # if user does not select file, browser also
         # submit an empty part without filename
         if file.filename == '':
-            return redirect(request.url)
+            return "No filename"
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(path.join(app.config['UPLOAD_FOLDER'], filename))
